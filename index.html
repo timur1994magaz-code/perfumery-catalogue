@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   :root {
     --cream: #f4ecd8;
@@ -612,7 +613,7 @@
         </div>
         <div class="controls">
           <input type="text" class="search" id="ingr-search" placeholder="search the catalogue…">
-          <button class="btn btn-ghost" id="reset-btn" title="Clear all and reload examples">↻ Reset</button>
+          <button class="btn btn-ghost" id="export-btn" title="Export catalogue to Excel">↓ Export</button>
           <button class="btn" id="add-ingr-btn">+ Add</button>
         </div>
       </div>
@@ -1080,13 +1081,64 @@ document.getElementById('form-save').addEventListener('click', () => {
 
 document.getElementById('form-search').addEventListener('input', renderFormulas);
 
-/* ============ RESET ============ */
-document.getElementById('reset-btn').addEventListener('click', () => {
-  if (confirm('Clear the entire catalogue and reload example entries?')) {
-    localStorage.removeItem(LS_INGR);
-    localStorage.removeItem(LS_FORM);
-    location.reload();
+/* ============ EXPORT ============ */
+document.getElementById('export-btn').addEventListener('click', () => {
+  if (typeof XLSX === 'undefined') {
+    alert('Export library is still loading. Please try again in a moment.');
+    return;
   }
+
+  const wb = XLSX.utils.book_new();
+
+  sortIngredients();
+  const ingrRows = ingredients.map(i => ({
+    'Name': i.name || '',
+    'Description': i.desc || '',
+    'Working Solution': i.ws || '',
+    'CAS №': i.cas || '',
+    'Note': i.note || ''
+  }));
+  const ingrSheet = XLSX.utils.json_to_sheet(ingrRows, {
+    header: ['Name', 'Description', 'Working Solution', 'CAS №', 'Note']
+  });
+  ingrSheet['!cols'] = [{ wch: 24 }, { wch: 56 }, { wch: 18 }, { wch: 16 }, { wch: 14 }];
+  XLSX.utils.book_append_sheet(wb, ingrSheet, 'Ingredients');
+
+  const formRows = [];
+  formulas.forEach(f => {
+    const rows = f.rows || [];
+    const totalPercent = rows.reduce((s, r) => s + (parseFloat(r.percent) || 0), 0);
+    const totalAmount = rows.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+    rows.forEach((r, idx) => {
+      formRows.push({
+        'Formula': idx === 0 ? f.name : '',
+        'Note': idx === 0 ? (f.note || '') : '',
+        'Ingredient': r.name || '',
+        'Input %': r.percent === '' || r.percent == null ? '' : Number(r.percent),
+        'Quantity': r.amount === '' || r.amount == null ? '' : Number(r.amount)
+      });
+    });
+    if (rows.length === 0) {
+      formRows.push({ 'Formula': f.name, 'Note': f.note || '', 'Ingredient': '', 'Input %': '', 'Quantity': '' });
+    }
+    formRows.push({
+      'Formula': '', 'Note': '', 'Ingredient': 'TOTAL',
+      'Input %': Number(totalPercent.toFixed(2)),
+      'Quantity': Number(totalAmount.toFixed(3))
+    });
+    formRows.push({});
+  });
+  const formSheet = XLSX.utils.json_to_sheet(formRows, {
+    header: ['Formula', 'Note', 'Ingredient', 'Input %', 'Quantity']
+  });
+  formSheet['!cols'] = [{ wch: 22 }, { wch: 26 }, { wch: 24 }, { wch: 10 }, { wch: 12 }];
+  XLSX.utils.book_append_sheet(wb, formSheet, 'Formulas');
+
+  const d = new Date();
+  const stamp = d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+  XLSX.writeFile(wb, `parfumerie_${stamp}.xlsx`);
 });
 
 /* ============ INIT ============ */
