@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Картотека · Parfumerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f4ecd8;
+    --cream-deep: #ebe0c4;
+    --paper: #faf6ea;
+    --ink: #1a1a1a;
+    --ink-soft: #2c2c2c;
+    --sepia: #6b5a3e;
+    --sepia-light: #8a7858;
+    --forest: #2d4a36;
+    --forest-deep: #1f3527;
+    --rust: #8b3a1f;
+    --gold: #a07e3b;
+    --line: #c9b88f;
+    --line-soft: #d9cba6;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'EB Garamond', Georgia, serif;
+    background: var(--cream);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(160, 126, 59, 0.08), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(45, 74, 54, 0.06), transparent 50%);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 0;
+  }
+
+  /* Paper texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(107, 90, 62, 0.015) 2px, rgba(107, 90, 62, 0.015) 3px),
+      repeating-linear-gradient(90deg, transparent 0, transparent 2px, rgba(107, 90, 62, 0.012) 2px, rgba(107, 90, 62, 0.012) 3px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--forest-deep);
+    color: var(--cream);
+    padding: 48px 24px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    border-right: 1px solid var(--forest);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .brand-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 48px;
+    opacity: 0.8;
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    text-align: left;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.3px;
+  }
+
+  .nav-btn:hover {
+    background: rgba(244, 236, 216, 0.05);
+    border-left-color: var(--gold);
+  }
+
+  .nav-btn.active {
+    background: rgba(244, 236, 216, 0.08);
+    border-left-color: var(--gold);
+    font-style: italic;
+  }
+
+  .nav-btn .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    opacity: 0.7;
+    min-width: 24px;
+  }
+
+  .sidebar-foot {
+    margin-top: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--sepia-light);
+    text-transform: uppercase;
+    opacity: 0.5;
+    border-top: 1px solid rgba(244, 236, 216, 0.1);
+    padding-top: 24px;
+  }
+
+  /* MAIN */
+  .main {
+    padding: 48px 56px 80px;
+    overflow-x: auto;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .header-left h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+  }
+
+  .header-left h1 em {
+    font-style: italic;
+    color: var(--forest);
+  }
+
+  .header-left .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--sepia);
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 10px 16px;
+    font-family: 'EB Garamond', serif;
+    font-size: 15px;
+    color: var(--ink);
+    width: 240px;
+    font-style: italic;
+    transition: border-color 0.2s;
+  }
+  .search:focus {
+    outline: none;
+    border-color: var(--forest);
+  }
+  .search::placeholder { color: var(--sepia-light); }
+
+  .btn {
+    background: var(--forest);
+    color: var(--cream);
+    border: none;
+    padding: 11px 22px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: var(--forest-deep); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--forest);
+    border: 1px solid var(--forest);
+  }
+  .btn-ghost:hover { background: var(--forest); color: var(--cream); }
+
+  .btn-small {
+    padding: 6px 14px;
+    font-size: 14px;
+  }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    box-shadow: 0 2px 0 var(--line-soft), 0 8px 24px rgba(107, 90, 62, 0.08);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+
+  thead th {
+    background: var(--cream-deep);
+    text-align: left;
+    padding: 14px 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--sepia);
+    border-bottom: 2px solid var(--line);
+  }
+
+  tbody td {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: top;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(244, 236, 216, 0.5); }
+
+  .letter-row td {
+    background: var(--forest);
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    padding: 8px 18px;
+    letter-spacing: 4px;
+  }
+
+  .ingr-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .ingr-desc {
+    color: var(--ink-soft);
+    font-size: 14px;
+    max-width: 380px;
+    line-height: 1.45;
+  }
+
+  .ingr-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--sepia);
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid currentColor;
+  }
+  .tag.top { color: var(--rust); }
+  .tag.middle { color: var(--gold); }
+  .tag.base { color: var(--forest); }
+
+  .row-actions {
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  tbody tr:hover .row-actions { opacity: 1; }
+
+  .icon-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--sepia);
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .icon-btn:hover { background: var(--forest); color: var(--cream); border-color: var(--forest); }
+  .icon-btn.danger:hover { background: var(--rust); border-color: var(--rust); }
+
+  .empty {
+    padding: 80px 24px;
+    text-align: center;
+    color: var(--sepia);
+    font-style: italic;
+    font-size: 18px;
+  }
+
+  /* FORMULAS */
+  .formula-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    margin-bottom: 16px;
+    box-shadow: 0 2px 0 var(--line-soft);
+    transition: box-shadow 0.2s;
+  }
+  .formula-card:hover {
+    box-shadow: 0 2px 0 var(--line-soft), 0 6px 20px rgba(107, 90, 62, 0.1);
+  }
+
+  .formula-head {
+    padding: 20px 28px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .formula-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--ink);
+    flex: 1;
+  }
+  .formula-title em {
+    color: var(--forest);
+    font-style: italic;
+  }
+
+  .formula-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--sepia);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .chevron {
+    color: var(--sepia);
+    font-size: 18px;
+    transition: transform 0.25s;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .formula-card.open .chevron { transform: rotate(90deg); }
+
+  .formula-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .formula-card.open .formula-body { max-height: 2000px; }
+
+  .formula-inner {
+    border-top: 1px solid var(--line-soft);
+    padding: 24px 28px 28px;
+    background: linear-gradient(180deg, rgba(244, 236, 216, 0.4), transparent);
+  }
+
+  .formula-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+  .formula-table th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--cream-deep);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sepia);
+    border-bottom: 1px solid var(--line);
+  }
+  .formula-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 15px;
+  }
+  .formula-table td:first-child { font-family: 'Cormorant Garamond', serif; font-size: 17px; }
+  .formula-table td.num { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--sepia); }
+  .formula-table tfoot td {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--forest);
+    background: var(--cream);
+    font-weight: 600;
+  }
+
+  .formula-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    border-top: 1px dashed var(--line-soft);
+    padding-top: 16px;
+  }
+
+  /* MODAL */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 53, 39, 0.45);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 24px;
+  }
+  .modal-bg.show { display: flex; }
+
+  .modal {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+    width: 100%;
+    max-width: 620px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 40px;
+  }
+
+  .modal h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 32px;
+    margin-bottom: 4px;
+  }
+  .modal h2 em { color: var(--forest); font-style: italic; }
+
+  .modal-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-bottom: 28px;
+  }
+
+  .field {
+    margin-bottom: 18px;
+  }
+  .field label {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-bottom: 6px;
+  }
+  .field input, .field textarea, .field select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    background: var(--cream);
+    font-family: 'EB Garamond', serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    outline: none;
+    border-color: var(--forest);
+  }
+  .field textarea {
+    min-height: 80px;
+    resize: vertical;
+    font-family: 'EB Garamond', serif;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 28px;
+    border-top: 1px solid var(--line-soft);
+    padding-top: 20px;
+  }
+
+  /* Formula ingredient rows in modal */
+  .formula-ingr-row {
+    display: grid;
+    grid-template-columns: 1fr 90px 90px 32px;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+  .formula-ingr-row input, .formula-ingr-row select {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+  .add-row-btn {
+    background: transparent;
+    border: 1px dashed var(--forest);
+    color: var(--forest);
+    padding: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    margin-top: 6px;
+  }
+  .add-row-btn:hover { background: var(--forest); color: var(--cream); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--line); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--sepia-light); }
+
+  @media (max-width: 880px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: relative; height: auto; padding: 24px; }
+    .sidebar-foot { display: none; }
+    .nav { flex-direction: row; }
+    .main { padding: 28px 20px 60px; }
+    .header-left h1 { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">Parfumerie<br><span style="font-size:18px;">Cartothèque</span></div>
+    <div class="brand-sub">Est. MMXXVI</div>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-view="ingredients">
+        <span class="num">I.</span> Ingredients
+      </button>
+      <button class="nav-btn" data-view="formulas">
+        <span class="num">II.</span> Formulae
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">Olfactory Index<br>Volume I</div>
+  </aside>
+
+  <main class="main">
+
+    <!-- INGREDIENTS VIEW -->
+    <section id="view-ingredients">
+      <div class="header">
+        <div class="header-left">
+          <h1><em>Ingredient</em> Catalogue</h1>
+          <div class="meta" id="ingr-count">— entries</div>
+        </div>
+        <div class="controls">
+          <input type="text" class="search" id="ingr-search" placeholder="search the catalogue…">
+          <button class="btn btn-ghost" id="reset-btn" title="Clear all and reload examples">↻ Reset</button>
+          <button class="btn" id="add-ingr-btn">+ Add</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 20%;">Ingredient</th>
+              <th style="width: 32%;">Description</th>
+              <th style="width: 14%;">Working Solution</th>
+              <th style="width: 14%;">CAS №</th>
+              <th style="width: 12%;">Note</th>
+              <th style="width: 8%;"></th>
+            </tr>
+          </thead>
+          <tbody id="ingr-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FORMULAS VIEW -->
+    <section id="view-formulas" style="display:none;">
+      <div class="header">
+        <div class="header-left">
+          <h1>Book of <em>Formulae</em></h1>
+          <div class="meta" id="form-count">— compositions</div>
+        </div>
+        <div class="controls">
+          <input type="text" class="search" id="form-search" placeholder="search formula…">
+          <button class="btn" id="add-form-btn">+ New Formula</button>
+        </div>
+      </div>
+
+      <div id="formulas-list"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- INGREDIENT MODAL -->
+<div class="modal-bg" id="ingr-modal">
+  <div class="modal">
+    <h2 id="ingr-modal-title">New <em>Ingredient</em></h2>
+    <div class="modal-sub">Entry in the catalogue</div>
+
+    <div class="field">
+      <label>Name</label>
+      <input type="text" id="f-name" placeholder="e.g. Bergamot">
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <textarea id="f-desc" placeholder="краткое описание ольфакторного профиля…"></textarea>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Working Solution</label>
+        <input type="text" id="f-ws" placeholder="e.g. 10% DPG">
+      </div>
+      <div class="field">
+        <label>CAS №</label>
+        <input type="text" id="f-cas" placeholder="e.g. 8007-75-8">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Note</label>
+      <select id="f-note">
+        <option value="Top">Top</option>
+        <option value="Middle">Middle</option>
+        <option value="Base">Base</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="ingr-cancel">Cancel</button>
+      <button class="btn" id="ingr-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- FORMULA MODAL -->
+<div class="modal-bg" id="form-modal">
+  <div class="modal">
+    <h2 id="form-modal-title">New <em>Formula</em></h2>
+    <div class="modal-sub">Perfume composition</div>
+
+    <div class="field">
+      <label>Formula name</label>
+      <input type="text" id="ff-name" placeholder="e.g. Essence №1">
+    </div>
+
+    <div class="field">
+      <label>Note (optional)</label>
+      <input type="text" id="ff-note" placeholder="e.g. Citrus accord for summer">
+    </div>
+
+    <div class="field">
+      <label>Composition</label>
+      <div id="ff-rows"></div>
+      <button class="add-row-btn" id="ff-add-row">+ Add component</button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="form-cancel">Cancel</button>
+      <button class="btn" id="form-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ STATE ============ */
+const LS_INGR = 'parfum_ingredients_v1';
+const LS_FORM = 'parfum_formulas_v1';
+
+let ingredients = JSON.parse(localStorage.getItem(LS_INGR) || '[]');
+let formulas = JSON.parse(localStorage.getItem(LS_FORM) || '[]');
+
+let editingIngrId = null;
+let editingFormId = null;
+
+/* ============ SEED EXAMPLES (only first load) ============ */
+if (ingredients.length === 0 && formulas.length === 0) {
+  ingredients = [
+    { id: uid(), name: 'Bergamot', desc: 'Свежий цитрусовый аромат с цветочно-пряным оттенком. Классическая верхняя нота.', ws: '10% DPG', cas: '8007-75-8', note: 'Top' },
+    { id: uid(), name: 'Vetiver', desc: 'Землистый, дымный, древесно-травянистый. Глубокая базовая нота.', ws: '10% DPG', cas: '8016-96-4', note: 'Base' },
+    { id: uid(), name: 'Jasmine Sambac', desc: 'Насыщенно-индольный, белоцветочный, чувственный.', ws: '10% DPG', cas: '91770-14-8', note: 'Middle' },
+    { id: uid(), name: 'Sandalwood', desc: 'Кремовый, молочный, мягкий древесный аромат.', ws: '10% DPG', cas: '8006-87-9', note: 'Base' }
+  ];
+  formulas = [
+    {
+      id: uid(),
+      name: 'Essence №1',
+      note: 'Citrus-woody trial',
+      rows: [
+        { name: 'Bergamot', percent: 15, amount: 0.15 },
+        { name: 'Jasmine Sambac', percent: 8, amount: 0.08 },
+        { name: 'Sandalwood', percent: 12, amount: 0.12 },
+        { name: 'Vetiver', percent: 5, amount: 0.05 }
+      ]
+    }
+  ];
+  saveAll();
+}
+
+function uid() { return Math.random().toString(36).slice(2, 10); }
+function saveAll() {
+  localStorage.setItem(LS_INGR, JSON.stringify(ingredients));
+  localStorage.setItem(LS_FORM, JSON.stringify(formulas));
+}
+
+/* ============ NAV ============ */
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.dataset.view;
+    document.getElementById('view-ingredients').style.display = view === 'ingredients' ? '' : 'none';
+    document.getElementById('view-formulas').style.display = view === 'formulas' ? '' : 'none';
+  });
+});
+
+/* ============ INGREDIENTS RENDER ============ */
+const TRANSLIT_MAP = {
+  'А':'A','Б':'B','В':'V','Г':'G','Д':'D','Е':'E','Ё':'E','Ж':'ZH','З':'Z',
+  'И':'I','Й':'Y','К':'K','Л':'L','М':'M','Н':'N','О':'O','П':'P','Р':'R',
+  'С':'S','Т':'T','У':'U','Ф':'F','Х':'KH','Ц':'TS','Ч':'CH','Ш':'SH',
+  'Щ':'SCH','Ъ':'','Ы':'Y','Ь':'','Э':'E','Ю':'YU','Я':'YA'
+};
+
+function translitLetter(name) {
+  const ch = (name || '').trim().charAt(0).toUpperCase();
+  if (!ch) return '';
+  return TRANSLIT_MAP[ch] !== undefined ? TRANSLIT_MAP[ch] : ch;
+}
+
+function sortIngredients() {
+  ingredients.sort((a, b) => {
+    const la = translitLetter(a.name);
+    const lb = translitLetter(b.name);
+    if (la !== lb) return la.localeCompare(lb, 'en');
+    return a.name.localeCompare(b.name, 'ru', { sensitivity: 'base' });
+  });
+}
+
+function renderIngredients() {
+  sortIngredients();
+  const q = document.getElementById('ingr-search').value.trim().toLowerCase();
+  const filtered = q
+    ? ingredients.filter(i =>
+        i.name.toLowerCase().includes(q) ||
+        (i.desc || '').toLowerCase().includes(q) ||
+        (i.cas || '').toLowerCase().includes(q))
+    : ingredients;
+
+  const tbody = document.getElementById('ingr-tbody');
+  tbody.innerHTML = '';
+
+  document.getElementById('ingr-count').textContent =
+    `${ingredients.length} ${ingredients.length === 1 ? 'entry' : 'entries'}`;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty">The catalogue is empty. Add your first ingredient.</td></tr>`;
+    return;
+  }
+
+  let currentLetter = '';
+  filtered.forEach(item => {
+    const letter = translitLetter(item.name);
+    if (letter !== currentLetter) {
+      currentLetter = letter;
+      const lr = document.createElement('tr');
+      lr.className = 'letter-row';
+      lr.innerHTML = `<td colspan="6">${letter}</td>`;
+      tbody.appendChild(lr);
+    }
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="ingr-name">${escapeHtml(item.name)}</td>
+      <td class="ingr-desc">${escapeHtml(item.desc || '')}</td>
+      <td class="ingr-mono">${escapeHtml(item.ws || '—')}</td>
+      <td class="ingr-mono">${escapeHtml(item.cas || '—')}</td>
+      <td><span class="tag ${(item.note || '').toLowerCase()}">${escapeHtml(item.note || '—')}</span></td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-btn" title="Edit" data-edit="${item.id}">✎</button>
+          <button class="icon-btn danger" title="Delete" data-del="${item.id}">×</button>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => openIngrModal(b.dataset.edit)));
+  tbody.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
+    if (confirm('Delete this entry?')) {
+      ingredients = ingredients.filter(x => x.id !== b.dataset.del);
+      saveAll();
+      renderIngredients();
+    }
+  }));
+}
+
+function declOf(n, forms) {
+  const a = Math.abs(n) % 100;
+  const b = a % 10;
+  if (a > 10 && a < 20) return forms[2];
+  if (b > 1 && b < 5) return forms[1];
+  if (b === 1) return forms[0];
+  return forms[2];
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ============ INGREDIENT MODAL ============ */
+const ingrModal = document.getElementById('ingr-modal');
+
+function openIngrModal(id = null) {
+  editingIngrId = id;
+  const titleEl = document.getElementById('ingr-modal-title');
+  if (id) {
+    const it = ingredients.find(x => x.id === id);
+    titleEl.innerHTML = 'Edit <em>Ingredient</em>';
+    document.getElementById('f-name').value = it.name;
+    document.getElementById('f-desc').value = it.desc || '';
+    document.getElementById('f-ws').value = it.ws || '';
+    document.getElementById('f-cas').value = it.cas || '';
+    document.getElementById('f-note').value = it.note || 'Top';
+  } else {
+    titleEl.innerHTML = 'New <em>Ingredient</em>';
+    ['f-name','f-desc','f-ws','f-cas'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('f-note').value = 'Top';
+  }
+  ingrModal.classList.add('show');
+  setTimeout(() => document.getElementById('f-name').focus(), 50);
+}
+
+document.getElementById('add-ingr-btn').addEventListener('click', () => openIngrModal());
+document.getElementById('ingr-cancel').addEventListener('click', () => ingrModal.classList.remove('show'));
+ingrModal.addEventListener('click', e => { if (e.target === ingrModal) ingrModal.classList.remove('show'); });
+
+document.getElementById('ingr-save').addEventListener('click', () => {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { alert('Please enter a name'); return; }
+  const data = {
+    name,
+    desc: document.getElementById('f-desc').value.trim(),
+    ws: document.getElementById('f-ws').value.trim(),
+    cas: document.getElementById('f-cas').value.trim(),
+    note: document.getElementById('f-note').value
+  };
+  if (editingIngrId) {
+    const idx = ingredients.findIndex(x => x.id === editingIngrId);
+    ingredients[idx] = { ...ingredients[idx], ...data };
+  } else {
+    ingredients.push({ id: uid(), ...data });
+  }
+  saveAll();
+  renderIngredients();
+  ingrModal.classList.remove('show');
+});
+
+document.getElementById('ingr-search').addEventListener('input', renderIngredients);
+
+/* ============ FORMULAS RENDER ============ */
+function renderFormulas() {
+  const q = document.getElementById('form-search').value.trim().toLowerCase();
+  const filtered = q ? formulas.filter(f => f.name.toLowerCase().includes(q)) : formulas;
+  const list = document.getElementById('formulas-list');
+  list.innerHTML = '';
+
+  document.getElementById('form-count').textContent =
+    `${formulas.length} ${formulas.length === 1 ? 'composition' : 'compositions'}`;
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty" style="background:var(--paper);border:1px solid var(--line);">Your formulae will appear here. Create the first one.</div>`;
+    return;
+  }
+
+  filtered.forEach(f => {
+    const totalPercent = (f.rows || []).reduce((s, r) => s + (parseFloat(r.percent) || 0), 0);
+    const totalAmount = (f.rows || []).reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+    const card = document.createElement('div');
+    card.className = 'formula-card';
+    card.innerHTML = `
+      <div class="formula-head">
+        <div>
+          <div class="formula-title"><em>№</em> ${escapeHtml(f.name)}</div>
+          <div class="formula-meta">${(f.rows||[]).length} components${f.note ? ' · ' + escapeHtml(f.note) : ''}</div>
+        </div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="formula-body">
+        <div class="formula-inner">
+          <table class="formula-table">
+            <thead>
+              <tr><th>Ingredient</th><th>Input %</th><th>Quantity</th></tr>
+            </thead>
+            <tbody>
+              ${(f.rows||[]).map(r => `
+                <tr>
+                  <td>${escapeHtml(r.name)}</td>
+                  <td class="num">${escapeHtml(String(r.percent))}%</td>
+                  <td class="num">${escapeHtml(String(r.amount))}</td>
+                </tr>`).join('')}
+            </tbody>
+            <tfoot>
+              <tr><td>Total</td><td class="num">${totalPercent.toFixed(2)}%</td><td class="num">${totalAmount.toFixed(3)}</td></tr>
+            </tfoot>
+          </table>
+          <div class="formula-actions">
+            <button class="btn btn-ghost btn-small" data-form-edit="${f.id}">Edit</button>
+            <button class="btn btn-ghost btn-small" data-form-del="${f.id}" style="border-color:var(--rust); color:var(--rust);">Delete</button>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(card);
+
+    card.querySelector('.formula-head').addEventListener('click', () => card.classList.toggle('open'));
+  });
+
+  list.querySelectorAll('[data-form-edit]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    openFormModal(b.dataset.formEdit);
+  }));
+  list.querySelectorAll('[data-form-del]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    if (confirm('Delete this formula?')) {
+      formulas = formulas.filter(x => x.id !== b.dataset.formDel);
+      saveAll();
+      renderFormulas();
+    }
+  }));
+}
+
+/* ============ FORMULA MODAL ============ */
+const formModal = document.getElementById('form-modal');
+let formRowsDraft = [];
+
+function renderFormRows() {
+  const wrap = document.getElementById('ff-rows');
+  wrap.innerHTML = '';
+  formRowsDraft.forEach((r, i) => {
+    const row = document.createElement('div');
+    row.className = 'formula-ingr-row';
+    const datalistId = `dl-${i}`;
+    row.innerHTML = `
+      <input type="text" placeholder="ingredient" value="${escapeHtml(r.name || '')}" list="${datalistId}" data-i="${i}" data-k="name">
+      <datalist id="${datalistId}">
+        ${ingredients.map(ing => `<option value="${escapeHtml(ing.name)}">`).join('')}
+      </datalist>
+      <input type="number" step="0.01" placeholder="%" value="${r.percent ?? ''}" data-i="${i}" data-k="percent">
+      <input type="number" step="0.001" placeholder="qty" value="${r.amount ?? ''}" data-i="${i}" data-k="amount">
+      <button class="icon-btn danger" data-rm="${i}" title="Remove row">×</button>`;
+    wrap.appendChild(row);
+  });
+
+  wrap.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('input', e => {
+      const i = +e.target.dataset.i;
+      const k = e.target.dataset.k;
+      formRowsDraft[i][k] = k === 'name' ? e.target.value : (e.target.value === '' ? '' : parseFloat(e.target.value));
+    });
+  });
+  wrap.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => {
+    formRowsDraft.splice(+b.dataset.rm, 1);
+    renderFormRows();
+  }));
+}
+
+function openFormModal(id = null) {
+  editingFormId = id;
+  const titleEl = document.getElementById('form-modal-title');
+  if (id) {
+    const f = formulas.find(x => x.id === id);
+    titleEl.innerHTML = 'Edit <em>Formula</em>';
+    document.getElementById('ff-name').value = f.name;
+    document.getElementById('ff-note').value = f.note || '';
+    formRowsDraft = JSON.parse(JSON.stringify(f.rows || []));
+  } else {
+    titleEl.innerHTML = 'New <em>Formula</em>';
+    document.getElementById('ff-name').value = '';
+    document.getElementById('ff-note').value = '';
+    formRowsDraft = [{ name: '', percent: '', amount: '' }];
+  }
+  renderFormRows();
+  formModal.classList.add('show');
+  setTimeout(() => document.getElementById('ff-name').focus(), 50);
+}
+
+document.getElementById('add-form-btn').addEventListener('click', () => openFormModal());
+document.getElementById('form-cancel').addEventListener('click', () => formModal.classList.remove('show'));
+formModal.addEventListener('click', e => { if (e.target === formModal) formModal.classList.remove('show'); });
+
+document.getElementById('ff-add-row').addEventListener('click', () => {
+  formRowsDraft.push({ name: '', percent: '', amount: '' });
+  renderFormRows();
+});
+
+document.getElementById('form-save').addEventListener('click', () => {
+  const name = document.getElementById('ff-name').value.trim();
+  if (!name) { alert('Please enter a formula name'); return; }
+  const cleanRows = formRowsDraft.filter(r => (r.name || '').trim() !== '');
+  const data = {
+    name,
+    note: document.getElementById('ff-note').value.trim(),
+    rows: cleanRows
+  };
+  if (editingFormId) {
+    const idx = formulas.findIndex(x => x.id === editingFormId);
+    formulas[idx] = { ...formulas[idx], ...data };
+  } else {
+    formulas.push({ id: uid(), ...data });
+  }
+  saveAll();
+  renderFormulas();
+  formModal.classList.remove('show');
+});
+
+document.getElementById('form-search').addEventListener('input', renderFormulas);
+
+/* ============ RESET ============ */
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (confirm('Clear the entire catalogue and reload example entries?')) {
+    localStorage.removeItem(LS_INGR);
+    localStorage.removeItem(LS_FORM);
+    location.reload();
+  }
+});
+
+/* ============ INIT ============ */
+renderIngredients();
+renderFormulas();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    ingrModal.classList.remove('show');
+    formModal.classList.remove('show');
+  }
+});
+</script>
+
+</body>
+</html>
