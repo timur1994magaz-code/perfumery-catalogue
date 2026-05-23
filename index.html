@@ -313,6 +313,9 @@
   .tag.top { color: var(--rust); }
   .tag.middle { color: var(--gold); }
   .tag.base { color: var(--forest); }
+  .tag.spine { color: var(--sepia); }
+  .tag.middle-base { color: #6b7a3e; }
+  .tag.top-middle { color: #b8642e; }
 
   .row-actions {
     display: flex;
@@ -683,6 +686,9 @@
         <option value="Top">Top</option>
         <option value="Middle">Middle</option>
         <option value="Base">Base</option>
+        <option value="Spine">Spine</option>
+        <option value="Middle/Base">Middle/Base</option>
+        <option value="Top/Middle">Top/Middle</option>
       </select>
     </div>
 
@@ -834,7 +840,7 @@ function renderIngredients() {
       <td class="ingr-desc">${escapeHtml(item.desc || '')}</td>
       <td class="ingr-mono">${escapeHtml(item.ws || '—')}</td>
       <td class="ingr-mono">${escapeHtml(item.cas || '—')}</td>
-      <td><span class="tag ${(item.note || '').toLowerCase()}">${escapeHtml(item.note || '—')}</span></td>
+      <td><span class="tag ${(item.note || '').toLowerCase().replace(/\//g, '-')}">${escapeHtml(item.note || '—')}</span></td>
       <td>
         <div class="row-actions">
           <button class="icon-btn" title="Edit" data-edit="${item.id}">✎</button>
