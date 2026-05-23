@@ -770,6 +770,41 @@ function saveAll() {
   localStorage.setItem(LS_FORM, JSON.stringify(formulas));
 }
 
+/* ============ ONE-OFF MIGRATIONS ============ */
+const LS_MIGRATIONS = 'parfum_migrations_applied';
+const appliedMigrations = JSON.parse(localStorage.getItem(LS_MIGRATIONS) || '[]');
+
+const migrations = [
+  {
+    id: '2026-05-23-add-12-14',
+    apply() {
+      const adds = [
+        { name: 'Cedarwood Virginian Oil', desc: 'Синтетический, травяной, земля-дерево, табачный, горьковато-сухо, бордовый, тёмно-зелёный, прохладный', ws: '', cas: '8000-27-9 / 85085-41-2', note: 'Base' },
+        { name: 'Hedione', desc: 'Свежо, сложно описать, слегка белые цветы, озон, молочность, кисловатый, белый, прохладный', ws: '10%', cas: '24851-98-7', note: 'Middle' },
+        { name: 'Triplal', desc: 'Ацетон, растворительно-цветочный, абсолютно химический, зелёный, свежий, тёплый', ws: '1%', cas: '68039-49-6', note: 'Top' }
+      ];
+      adds.forEach(a => {
+        if (!ingredients.find(i => (i.name || '').toLowerCase() === a.name.toLowerCase())) {
+          ingredients.push({ id: uid(), ...a });
+        }
+      });
+    }
+  }
+];
+
+let migrationRan = false;
+migrations.forEach(m => {
+  if (!appliedMigrations.includes(m.id)) {
+    m.apply();
+    appliedMigrations.push(m.id);
+    migrationRan = true;
+  }
+});
+if (migrationRan) {
+  localStorage.setItem(LS_MIGRATIONS, JSON.stringify(appliedMigrations));
+  saveAll();
+}
+
 /* ============ NAV ============ */
 document.querySelectorAll('.nav-btn').forEach(btn => {
   btn.addEventListener('click', () => {
