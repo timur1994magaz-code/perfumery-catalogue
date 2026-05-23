@@ -581,7 +581,66 @@
     .nav { flex-direction: row; }
     .main { padding: 28px 20px 60px; }
     .header-left h1 { font-size: 36px; }
+    /* On mobile, hide the per-row inline actions; tap row to open action sheet */
+    table th:last-child, table td:last-child { display: none; }
+    tbody tr:not(.letter-row) { cursor: pointer; }
+    tbody tr:not(.letter-row):active { background: rgba(244, 236, 216, 0.7); }
   }
+
+  /* ACTION SHEET (mobile) */
+  .sheet-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 53, 39, 0.45);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 90;
+    animation: sheetFadeIn 0.18s ease;
+  }
+  .sheet-bg.show { display: flex; }
+  @keyframes sheetFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .sheet {
+    background: var(--paper);
+    width: 100%;
+    max-width: 520px;
+    padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.18);
+    animation: sheetSlide 0.22s ease;
+  }
+  @keyframes sheetSlide {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .sheet-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    padding: 4px 4px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    margin-bottom: 4px;
+  }
+  .sheet .btn {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 17px;
+    text-align: center;
+  }
+  .sheet .btn-del {
+    background: transparent;
+    color: var(--rust);
+    border: 1px solid var(--rust);
+  }
+  .sheet .btn-del:hover { background: var(--rust); color: var(--cream); }
 </style>
 </head>
 <body>
@@ -654,6 +713,16 @@
     </section>
 
   </main>
+</div>
+
+<!-- ROW ACTION SHEET (mobile) -->
+<div class="sheet-bg" id="row-sheet-bg">
+  <div class="sheet">
+    <div class="sheet-title" id="row-sheet-title">—</div>
+    <button class="btn" id="row-sheet-edit">✎ Edit</button>
+    <button class="btn btn-del" id="row-sheet-del">× Delete</button>
+    <button class="btn btn-ghost" id="row-sheet-cancel">Cancel</button>
+  </div>
 </div>
 
 <!-- INGREDIENT MODAL -->
@@ -911,15 +980,71 @@ function renderIngredients() {
     tbody.appendChild(tr);
   });
 
-  tbody.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => openIngrModal(b.dataset.edit)));
-  tbody.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
+  tbody.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    openIngrModal(b.dataset.edit);
+  }));
+  tbody.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
     if (confirm('Delete this entry?')) {
       ingredients = ingredients.filter(x => x.id !== b.dataset.del);
       saveAll();
       renderIngredients();
     }
   }));
+
+  // Mobile: tap row to open action sheet
+  tbody.querySelectorAll('tr:not(.letter-row)').forEach(tr => {
+    const editBtn = tr.querySelector('[data-edit]');
+    if (!editBtn) return;
+    const id = editBtn.dataset.edit;
+    tr.addEventListener('click', e => {
+      if (!isMobileView()) return;
+      if (e.target.closest('button')) return;
+      openRowSheet(id);
+    });
+  });
 }
+
+/* ============ MOBILE ROW ACTION SHEET ============ */
+function isMobileView() {
+  return window.matchMedia('(max-width: 880px)').matches;
+}
+
+let activeRowIngrId = null;
+const rowSheetBg = document.getElementById('row-sheet-bg');
+const rowSheetTitle = document.getElementById('row-sheet-title');
+
+function openRowSheet(id) {
+  const it = ingredients.find(x => x.id === id);
+  if (!it) return;
+  activeRowIngrId = id;
+  rowSheetTitle.textContent = it.name || '—';
+  rowSheetBg.classList.add('show');
+}
+function closeRowSheet() {
+  rowSheetBg.classList.remove('show');
+  activeRowIngrId = null;
+}
+
+document.getElementById('row-sheet-edit').addEventListener('click', () => {
+  const id = activeRowIngrId;
+  closeRowSheet();
+  if (id) openIngrModal(id);
+});
+document.getElementById('row-sheet-del').addEventListener('click', () => {
+  const id = activeRowIngrId;
+  closeRowSheet();
+  if (id && confirm('Delete this entry?')) {
+    ingredients = ingredients.filter(x => x.id !== id);
+    saveAll();
+    renderIngredients();
+  }
+});
+document.getElementById('row-sheet-cancel').addEventListener('click', closeRowSheet);
+rowSheetBg.addEventListener('click', e => {
+  if (e.target === rowSheetBg) closeRowSheet();
+});
 
 function declOf(n, forms) {
   const a = Math.abs(n) % 100;
@@ -1272,6 +1397,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     ingrModal.classList.remove('show');
     formModal.classList.remove('show');
+    rowSheetBg.classList.remove('show');
   }
 });
 </script>
