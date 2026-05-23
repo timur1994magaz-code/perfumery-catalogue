@@ -317,6 +317,7 @@
   .tag.spine { color: var(--sepia); }
   .tag.middle-base { color: #6b7a3e; }
   .tag.top-middle { color: #b8642e; }
+  .tag.middle-spine { color: #7a6a3e; }
 
   .row-actions {
     display: flex;
@@ -690,6 +691,7 @@
         <option value="Spine">Spine</option>
         <option value="Middle/Base">Middle/Base</option>
         <option value="Top/Middle">Top/Middle</option>
+        <option value="Middle/Spine">Middle/Spine</option>
       </select>
     </div>
 
@@ -781,6 +783,29 @@ const migrations = [
         { name: 'Cedarwood Virginian Oil', desc: 'Синтетический, травяной, земля-дерево, табачный, горьковато-сухо, бордовый, тёмно-зелёный, прохладный', ws: '', cas: '8000-27-9 / 85085-41-2', note: 'Base' },
         { name: 'Hedione', desc: 'Свежо, сложно описать, слегка белые цветы, озон, молочность, кисловатый, белый, прохладный', ws: '10%', cas: '24851-98-7', note: 'Middle' },
         { name: 'Triplal', desc: 'Ацетон, растворительно-цветочный, абсолютно химический, зелёный, свежий, тёплый', ws: '1%', cas: '68039-49-6', note: 'Top' }
+      ];
+      adds.forEach(a => {
+        if (!ingredients.find(i => (i.name || '').toLowerCase() === a.name.toLowerCase())) {
+          ingredients.push({ id: uid(), ...a });
+        }
+      });
+    }
+  },
+  {
+    id: '2026-05-23-add-1-11',
+    apply() {
+      const adds = [
+        { name: 'Bergamot', desc: 'Чай, лаванда, специи, цитрус, свежо, шероховато', ws: '10%', cas: '89957-91-5 / 8007-75-8 / 68648-33-9 / 71949-33-2', note: 'Top' },
+        { name: 'Linalyl Acetate', desc: 'Чай, бергамот, специи, лаванда, звенящий, горький, зелёный, яркий, холодный', ws: '', cas: '115-95-7', note: 'Top' },
+        { name: 'Lavender', desc: 'Специи, мягкие, возможно гвоздично, остро, парфюмерно, лаванда, сырая земля, камфорность, цветочный, травяной, бодро, горячо', ws: '10%', cas: '8000-28-0', note: 'Middle' },
+        { name: 'Linalool', desc: 'Лаванда, но более цветочная, индольная, бергамот, тёплая, сухая, розово-сиреневая', ws: '10%', cas: '', note: 'Middle/Spine' },
+        { name: 'Calone', desc: 'Море, мокрые камни с водорослями, металл, немного арбуз, неприятный овощ, прохладный, прозрачно-голубой', ws: '10% / 1%', cas: '28940-11-6', note: 'Spine' },
+        { name: 'Ambroxan', desc: 'Мягкий ветер, озоновые частоты, мужской. Раскрывается позже и сильно, сухой и прозрачный', ws: '10% / 1%', cas: '6790-58-5', note: 'Base' },
+        { name: 'Iso E Super / Iso Myrcetone', desc: 'Сексуально, чувственно, мускус, чистое тело, спил дерева, пудрово-древесная нота, белая, бежевая', ws: '10%', cas: '54464-57-2', note: 'Base' },
+        { name: 'Anethole', desc: 'Анис, мерзко, тошнотворно, трава, лекарство, мокро, бордо, зелёно-красный', ws: '1%', cas: '104-46-1 / 4180-23-8', note: 'Top' },
+        { name: 'Vetiver Haiti Oil', desc: 'Остро, специи, травы, земля, деревяшка, шоколад, табачность, ментоловый, камфорный, шоколад, остро, тёпло-фиолетовый, коричневый', ws: '', cas: '', note: 'Base' },
+        { name: 'Lemon Oil', desc: 'Цитрус, ярко, звонко, сочно, лайм, супер кисло, терпко, жёлтый', ws: '10%', cas: '8008-56-8 / 84929-31-7', note: 'Top' },
+        { name: 'Hydroxycitronellal', desc: 'Цветочно, мягко, пудрово, белоцветочно, ландыш, свежий', ws: '10%', cas: '', note: 'Middle/Base' }
       ];
       adds.forEach(a => {
         if (!ingredients.find(i => (i.name || '').toLowerCase() === a.name.toLowerCase())) {
