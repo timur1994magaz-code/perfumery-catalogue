@@ -1138,8 +1138,68 @@ document.getElementById('export-btn').addEventListener('click', () => {
   const stamp = d.getFullYear() + '-' +
     String(d.getMonth() + 1).padStart(2, '0') + '-' +
     String(d.getDate()).padStart(2, '0');
-  XLSX.writeFile(wb, `parfumerie_${stamp}.xlsx`);
+  const filename = `parfumerie_${stamp}.xlsx`;
+
+  try {
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([wbout], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    downloadBlob(blob, filename);
+  } catch (err) {
+    alert('Export failed: ' + (err && err.message ? err.message : err));
+  }
 });
+
+function downloadBlob(blob, filename) {
+  // IE / old Edge
+  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+    window.navigator.msSaveOrOpenBlob(blob, filename);
+    return;
+  }
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+  if (isIOS) {
+    // iOS Safari ignores <a download> for blob: URLs.
+    // Use a data URL so the file opens in the share/preview sheet,
+    // from where the user can save to Files / iCloud / Mail.
+    const reader = new FileReader();
+    reader.onload = function () {
+      const dataUrl = reader.result;
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = filename;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        // Fallback: if nothing happened, navigate to the data URL
+        // (works in iOS Safari preview).
+      }, 150);
+    };
+    reader.onerror = function () {
+      alert('Could not prepare the file. Try a desktop browser.');
+    };
+    reader.readAsDataURL(blob);
+    return;
+  }
+
+  // Desktop + Android
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 200);
+}
 
 /* ============ INIT ============ */
 renderIngredients();
