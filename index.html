@@ -645,6 +645,7 @@
         </div>
         <div class="controls">
           <input type="text" class="search" id="form-search" placeholder="search formula…">
+          <button class="btn btn-ghost" id="export-btn-form" title="Export catalogue to Excel">↓ Export</button>
           <button class="btn" id="add-form-btn">+ New Formula</button>
         </div>
       </div>
@@ -1141,7 +1142,7 @@ document.getElementById('form-save').addEventListener('click', () => {
 document.getElementById('form-search').addEventListener('input', renderFormulas);
 
 /* ============ EXPORT ============ */
-document.getElementById('export-btn').addEventListener('click', () => {
+function exportToExcel() {
   if (typeof XLSX === 'undefined') {
     alert('Export library is still loading. Please try again in a moment.');
     return;
@@ -1208,7 +1209,10 @@ document.getElementById('export-btn').addEventListener('click', () => {
   } catch (err) {
     alert('Export failed: ' + (err && err.message ? err.message : err));
   }
-});
+}
+
+document.getElementById('export-btn').addEventListener('click', exportToExcel);
+document.getElementById('export-btn-form').addEventListener('click', exportToExcel);
 
 function downloadBlob(blob, filename) {
   // IE / old Edge
