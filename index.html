@@ -743,24 +743,11 @@ let editingFormId = null;
 /* ============ SEED EXAMPLES (only first load) ============ */
 if (ingredients.length === 0 && formulas.length === 0) {
   ingredients = [
-    { id: uid(), name: 'Bergamot', desc: 'Свежий цитрусовый аромат с цветочно-пряным оттенком. Классическая верхняя нота.', ws: '10% DPG', cas: '8007-75-8', note: 'Top' },
-    { id: uid(), name: 'Vetiver', desc: 'Землистый, дымный, древесно-травянистый. Глубокая базовая нота.', ws: '10% DPG', cas: '8016-96-4', note: 'Base' },
-    { id: uid(), name: 'Jasmine Sambac', desc: 'Насыщенно-индольный, белоцветочный, чувственный.', ws: '10% DPG', cas: '91770-14-8', note: 'Middle' },
-    { id: uid(), name: 'Sandalwood', desc: 'Кремовый, молочный, мягкий древесный аромат.', ws: '10% DPG', cas: '8006-87-9', note: 'Base' }
+    { id: uid(), name: 'Cedarwood Virginian Oil', desc: 'Синтетический, травяной, земля-дерево, табачный, горьковато-сухо, бордовый, тёмно-зелёный, прохладный', ws: '', cas: '8000-27-9 / 85085-41-2', note: 'Base' },
+    { id: uid(), name: 'Hedione', desc: 'Свежо, сложно описать, слегка белые цветы, озон, молочность, кисловатый, белый, прохладный', ws: '10%', cas: '24851-98-7', note: 'Middle' },
+    { id: uid(), name: 'Triplal', desc: 'Ацетон, растворительно-цветочный, абсолютно химический, зелёный, свежий, тёплый', ws: '1%', cas: '68039-49-6', note: 'Top' }
   ];
-  formulas = [
-    {
-      id: uid(),
-      name: 'Essence №1',
-      note: 'Citrus-woody trial',
-      rows: [
-        { name: 'Bergamot', percent: 15, amount: 0.15 },
-        { name: 'Jasmine Sambac', percent: 8, amount: 0.08 },
-        { name: 'Sandalwood', percent: 12, amount: 0.12 },
-        { name: 'Vetiver', percent: 5, amount: 0.05 }
-      ]
-    }
-  ];
+  formulas = [];
   saveAll();
 }
 
@@ -775,6 +762,18 @@ const LS_MIGRATIONS = 'parfum_migrations_applied';
 const appliedMigrations = JSON.parse(localStorage.getItem(LS_MIGRATIONS) || '[]');
 
 const migrations = [
+  {
+    id: '2026-05-23-remove-initial-seed',
+    apply() {
+      const seedNames = ['bergamot', 'vetiver', 'jasmine sambac', 'sandalwood'];
+      ingredients = ingredients.filter(i =>
+        !seedNames.includes((i.name || '').toLowerCase().trim())
+      );
+      formulas = formulas.filter(f =>
+        (f.name || '').toLowerCase().trim() !== 'essence №1'
+      );
+    }
+  },
   {
     id: '2026-05-23-add-12-14',
     apply() {
